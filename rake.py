@@ -16,10 +16,13 @@ from sklearn.feature_extraction.text import CountVectorizer
 from nltk.corpus import stopwords
 import re
 
-#input text and remove all punctuation and special char
-Text=text_inp.lower()
-Text= re.sub('[^a-zA-Z0-9 ]','',Text)
-Text=''.join(Text)
+
+Text=txt.lower()
+Text1=Text
+Text1=re.sub('[\n]',' ',Text1)
+
+Text= re.sub('[^a-zA-Z0-9 ]',' ',Text)
+
 text=Text.split(' ')
 
 #remove excessive white spaces
@@ -35,14 +38,11 @@ for i in range(len(index)):
     text.pop(index[i])
 
 Text=' '.join(text)  
-
-#remove stop words
 remove=stopwords.words('english')
 text=[w for w in text if w not in remove]
-
-#try to find the freq of words
 bow=CountVectorizer()
 text=' '.join(text)
+
 a=[text]
 freq=bow.fit_transform(a)
 
@@ -50,14 +50,34 @@ freq1=freq.toarray()[0]
 freq2=bow.vocabulary_
 
 
-#split with stopwords
-text1=Text
+text1=Text1
+remove.append(',')
+remove.append('.')
+remove.append('?')
+remove.append(';')
+remove.append('"')
 
 for i in remove:
     text1=re.sub(' '+i+' ' or ' '+i+'|' or '|'+i+' ' or '|'+i+'|',' | ',text1)
     
 
+
+
+
+
 text1=text1.split('|')
+
+index=[]
+for i in range(len(text1)):
+    if len(text1[i])==1:
+        index.append(i)
+
+for i in range(len(index)):
+    index[i]-=i
+
+for i in range(len(index)):
+    text1.pop(index[i])
+
 
 
 
@@ -76,7 +96,7 @@ score={}
 key1=list(deg.keys())
 key2=list(freq2.keys())
 
-#finding scores of individual words
+#stopped here 15/10/17
 for i in text.split(' '):
     if i not in list(score.keys()) and i in key1 and i in key2 and freq1[freq2[i]]!=0:
         score[i]=deg[i]/freq1[freq2[i]]
@@ -85,30 +105,26 @@ for i in text.split(' '):
 scorefinal={}
 key=list(score.keys())
 
-#final scores for words
 for i in text1:
     scorefinal[i]=0
-    used=[]
     for j in text.split(' '):
-        if j in i and j not in used and j in key :
+        if j in i and j in key :
             scorefinal[i]+=score[j]
-            used.append(j)
+            
 
 
 
 #freq_based_dict
 fbd={}
 for i in scorefinal.keys():
-    fbd[str(scorefinal[i])]=i
-
+    fbd[scorefinal[i]]=i
 
 topten=sorted(fbd.keys())[::-1]
 topten=topten[:10]
-#output top ten keywords
+
 for i in topten:
     print(fbd[i])
 
 
-#adjoining rare keywords(still to be done)
-#also add punctuations to stopwords(to be done)
+#adjoining rare keywords
 
