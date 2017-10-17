@@ -19,9 +19,9 @@ import re
 
 Text=txt.lower()
 Text1=Text
-Text1=re.sub('[\n]',' ',Text1)
+Text1=re.sub(r'[\n]',' ',Text1)
 
-Text= re.sub('[^a-zA-Z0-9 ]',' ',Text)
+Text= re.sub(r'[^a-zA-Z0-9 ]',' ',Text)
 
 text=Text.split(' ')
 
@@ -37,7 +37,7 @@ for i in range(len(index)):
 for i in range(len(index)):
     text.pop(index[i])
 
-Text=' '.join(text)  
+ 
 remove=stopwords.words('english')
 text=[w for w in text if w not in remove]
 bow=CountVectorizer()
@@ -51,19 +51,12 @@ freq2=bow.vocabulary_
 
 
 text1=Text1
-remove.append(',')
-remove.append('.')
-remove.append('?')
-remove.append(';')
-remove.append('"')
+for i in [',','.','?',';','"']:
+    remove.append(i)
 
 for i in remove:
     text1=re.sub(' '+i+' ' or ' '+i+'|' or '|'+i+' ' or '|'+i+'|',' | ',text1)
     
-
-
-
-
 
 text1=text1.split('|')
 
